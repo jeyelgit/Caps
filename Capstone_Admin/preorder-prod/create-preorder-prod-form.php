@@ -30,8 +30,8 @@ if (!$admin) {
 $adminName = htmlspecialchars($admin['First_Name']);
 $profilePicPath = htmlspecialchars($admin['PicPath']);
 
-// Fetch product data for dropdown
-$productQuery = "SELECT Product_ID, Product_Name, Price, GLB_File_URL FROM tbl_prod_info";
+// Fetch product data for dropdown (only readymade products)
+$productQuery = "SELECT Product_ID, Product_Name, Price, GLB_File_URL FROM tbl_prod_info WHERE product_type = 'readymade'";
 $productStmt = $pdo->prepare($productQuery);
 $productStmt->execute();
 $products = $productStmt->fetchAll(PDO::FETCH_ASSOC);
@@ -54,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Check for required fields
     if ($productID && $userID && $quantity && $totalPrice && $orderStatus !== null) {
         // Insert the preorder into the database
-        $insertQuery = "INSERT INTO tbl_preorder (Product_ID, User_ID, Quantity, Total_Price, Order_Status) VALUES (:product_id, :user_id, :quantity, :total_price, :order_status)";
+        $insertQuery = "INSERT INTO tbl_preorder (Product_ID, User_ID, Quantity, Total_Price, Preorder_Status) VALUES (:product_id, :user_id, :quantity, :total_price, :order_status)";
         $insertStmt = $pdo->prepare($insertQuery);
         $insertStmt->bindParam(':product_id', $productID);
         $insertStmt->bindParam(':user_id', $userID);
@@ -132,11 +132,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <i class="bx bx-menu sidebarBtn"></i>
                 <span class="dashboard">Dashboard</span>
             </div>
-            <div class="search-box">
-                <input type="text" placeholder="Search..." />
-                <i class="bx bx-search"></i>
-            </div>
-
+       
 
             <div class="profile-details" onclick="toggleDropdown()">
     <img src="<?php echo $profilePicPath; ?>" alt="Profile Picture" />

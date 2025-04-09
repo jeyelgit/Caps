@@ -58,122 +58,82 @@ $productStatusLabels = [
     100 => 'Sold / Installed',
 ];
 
+// Fetch records based on search or fetch all records
+$query = "
+    SELECT 
+        'custom' AS Order_Type,
+        c.Customization_ID AS ID,
+        c.Furniture_Type AS Product_Name,
+        CONCAT(u.First_Name, ' ', u.Last_Name) AS User_Name,
+        c.Order_Status,
+        c.Product_Status,
+        p.Price AS Price,
+        c.Last_Update AS Last_Update,
+        c.User_ID
+    FROM tbl_customizations c
+    JOIN tbl_user_info u ON c.User_ID = u.User_ID
+    LEFT JOIN tbl_prod_info p ON c.Product_ID = p.Product_ID
+    WHERE c.Order_Status = 100 AND c.Product_Status = 100
+    UNION
+    SELECT 
+        'pre_order' AS Order_Type,
+        po.Preorder_ID AS ID,
+        pr.Product_Name,
+        CONCAT(u.First_Name, ' ', u.Last_Name) AS User_Name,
+        po.Preorder_Status AS Order_Status,
+        po.Product_Status,
+        pr.Price AS Price,
+        po.Order_Date AS Last_Update,
+        u.User_ID
+    FROM tbl_preorder po
+    JOIN tbl_user_info u ON po.User_ID = u.User_ID
+    JOIN tbl_prod_info pr ON po.Product_ID = pr.Product_ID
+    WHERE po.Preorder_Status = 100 AND po.Product_Status = 100
+    UNION
+    SELECT 
+        'ready_made' AS Order_Type,
+        rmo.ReadyMadeOrder_ID AS ID,
+        pr.Product_Name,
+        CONCAT(u.First_Name, ' ', u.Last_Name) AS User_Name,
+        rmo.Order_Status,
+        rmo.Product_Status,
+        pr.Price AS Price,
+        rmo.Order_Date AS Last_Update,
+        u.User_ID
+    FROM tbl_ready_made_orders rmo
+    JOIN tbl_user_info u ON rmo.User_ID = u.User_ID
+    JOIN tbl_prod_info pr ON rmo.Product_ID = pr.Product_ID
+    WHERE rmo.Order_Status = 100 AND rmo.Product_Status = 100
+    ORDER BY Last_Update DESC
+";
+
 if (!empty($search)) {
-    $query = "
-        SELECT 
-            'custom' AS Order_Type,
-            c.Customization_ID AS ID,
-            c.Furniture_Type AS Product_Name,
-            CONCAT(u.First_Name, ' ', u.Last_Name) AS User_Name,
-            c.Order_Status,
-            c.Product_Status,
-            p.Price AS Price,
-            c.Last_Update AS Last_Update,
-            c.User_ID
-        FROM tbl_customizations c
-        JOIN tbl_user_info u ON c.User_ID = u.User_ID
-        LEFT JOIN tbl_prod_info p ON c.Product_ID = p.Product_ID
-        WHERE c.Order_Status = 100 AND c.Product_Status = 100 AND
-        (u.First_Name LIKE :search 
-        OR u.Last_Name LIKE :search 
-        OR c.Furniture_Type LIKE :search)
-        UNION
-        SELECT 
-            'pre_order' AS Order_Type,
-            po.Preorder_ID AS ID,
-            pr.Product_Name,
-            CONCAT(u.First_Name, ' ', u.Last_Name) AS User_Name,
-            po.Preorder_Status AS Order_Status,
-            po.Product_Status,
-            pr.Price AS Price,
-            po.Order_Date AS Last_Update,
-            u.User_ID
-        FROM tbl_preorder po
-        JOIN tbl_user_info u ON po.User_ID = u.User_ID
-        JOIN tbl_prod_info pr ON po.Product_ID = pr.Product_ID
-        WHERE po.Preorder_Status = 100 AND po.Product_Status = 100 AND
-        (u.First_Name LIKE :search 
-        OR u.Last_Name LIKE :search 
-        OR pr.Product_Name LIKE :search)
-        UNION
-        SELECT 
-            'ready_made' AS Order_Type,
-            rmo.ReadyMadeOrder_ID AS ID,
-            pr.Product_Name,
-            CONCAT(u.First_Name, ' ', u.Last_Name) AS User_Name,
-            rmo.Order_Status,
-            rmo.Product_Status,
-            pr.Price AS Price,
-            rmo.Order_Date AS Last_Update,
-            u.User_ID
-        FROM tbl_ready_made_orders rmo
-        JOIN tbl_user_info u ON rmo.User_ID = u.User_ID
-        JOIN tbl_prod_info pr ON rmo.Product_ID = pr.Product_ID
-        WHERE rmo.Order_Status = 100 AND rmo.Product_Status = 100 AND
-        (u.First_Name LIKE :search 
-        OR u.Last_Name LIKE :search 
-        OR pr.Product_Name LIKE :search)
-        ORDER BY Last_Update DESC
-    ";
-    $stmt = $pdo->prepare($query);
-    $searchParam = '%' . $search . '%';
-    $stmt->bindParam(':search', $searchParam, PDO::PARAM_STR);
-    $stmt->execute();
-    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} else {
-    // Fetch all records if no search query is provided
-    $query = "
-        SELECT 
-            'custom' AS Order_Type,
-            c.Customization_ID AS ID,
-            c.Furniture_Type AS Product_Name,
-            CONCAT(u.First_Name, ' ', u.Last_Name) AS User_Name,
-            c.Order_Status,
-            c.Product_Status,
-            p.Price AS Price,
-            c.Last_Update AS Last_Update,
-            c.User_ID
-        FROM tbl_customizations c
-        JOIN tbl_user_info u ON c.User_ID = u.User_ID
-        LEFT JOIN tbl_prod_info p ON c.Product_ID = p.Product_ID
-        WHERE c.Order_Status = 100 AND c.Product_Status = 100
-        UNION
-        SELECT 
-            'pre_order' AS Order_Type,
-            po.Preorder_ID AS ID,
-            pr.Product_Name,
-            CONCAT(u.First_Name, ' ', u.Last_Name) AS User_Name,
-            po.Preorder_Status AS Order_Status,
-            po.Product_Status,
-            pr.Price AS Price,
-            po.Order_Date AS Last_Update,
-            u.User_ID
-        FROM tbl_preorder po
-        JOIN tbl_user_info u ON po.User_ID = u.User_ID
-        JOIN tbl_prod_info pr ON po.Product_ID = pr.Product_ID
-        WHERE po.Preorder_Status = 100 AND po.Product_Status = 100
-        UNION
-        SELECT 
-            'ready_made' AS Order_Type,
-            rmo.ReadyMadeOrder_ID AS ID,
-            pr.Product_Name,
-            CONCAT(u.First_Name, ' ', u.Last_Name) AS User_Name,
-            rmo.Order_Status,
-            rmo.Product_Status,
-            pr.Price AS Price,
-            rmo.Order_Date AS Last_Update,
-            u.User_ID
-        FROM tbl_ready_made_orders rmo
-        JOIN tbl_user_info u ON rmo.User_ID = u.User_ID
-        JOIN tbl_prod_info pr ON rmo.Product_ID = pr.Product_ID
-        WHERE rmo.Order_Status = 100 AND rmo.Product_Status = 100
-        ORDER BY Last_Update DESC
-    ";
-    $stmt = $pdo->prepare($query);
-    $stmt->execute();
-    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $query = str_replace(
+        "WHERE c.Order_Status = 100 AND c.Product_Status = 100",
+        "WHERE c.Order_Status = 100 AND c.Product_Status = 100 AND (u.First_Name LIKE :search OR u.Last_Name LIKE :search OR c.Furniture_Type LIKE :search)",
+        $query
+    );
+    $query = str_replace(
+        "WHERE po.Preorder_Status = 100 AND po.Product_Status = 100",
+        "WHERE po.Preorder_Status = 100 AND po.Product_Status = 100 AND (u.First_Name LIKE :search OR u.Last_Name LIKE :search OR pr.Product_Name LIKE :search)",
+        $query
+    );
+    $query = str_replace(
+        "WHERE rmo.Order_Status = 100 AND rmo.Product_Status = 100",
+        "WHERE rmo.Order_Status = 100 AND rmo.Product_Status = 100 AND (u.First_Name LIKE :search OR u.Last_Name LIKE :search OR pr.Product_Name LIKE :search)",
+        $query
+    );
 }
 
+$stmt = $pdo->prepare($query);
+if (!empty($search)) {
+    $searchParam = '%' . $search . '%';
+    $stmt->bindParam(':search', $searchParam, PDO::PARAM_STR);
+}
+$stmt->execute();
+$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Handle AJAX requests to return only table rows
 if (isset($_GET['search'])) {
     foreach ($rows as $row) {
         $totalPrice = isset($row['Price']) ? number_format((float) $row['Price'], 2, '.', '') : 0;
@@ -354,24 +314,21 @@ if (isset($_GET['search'])) {
                 dropdownMenu.style.display = parent.classList.contains('active') ? 'block' : 'none';
             });
         });
+        </script>
+        <script>
+    document.querySelector('.search-box input[name="search"]').addEventListener('input', function () {
+        const searchValue = this.value.trim();
+        const url = searchValue ? `read-all-history-form.php?search=${encodeURIComponent(searchValue)}` : `read-all-history-form.php?search=`;
 
-        document.querySelector('.search-box input[name="search"]').addEventListener('input', function () {
-            const searchValue = this.value.trim();
-
-            // Determine the URL based on whether the search bar is empty
-            const url = searchValue ? `read-all-history-form.php?search=${encodeURIComponent(searchValue)}` : `read-all-history-form.php`;
-
-            // Send an AJAX request to fetch results
-            fetch(url)
-                .then(response => response.text())
-                .then(data => {
-                    // Update the purchase history list with the filtered results
-                    const tableBody = document.querySelector('#purchase-history-list table tbody');
-                    tableBody.innerHTML = data.trim(); // Ensure no extra whitespace is added
-                })
-                .catch(error => console.error('Error fetching search results:', error));
-        });
-    </script>
+        fetch(url)
+            .then(response => response.text())
+            .then(data => {
+                const tableBody = document.querySelector('#purchase-history-list table tbody');
+                tableBody.innerHTML = data.trim(); // Replace the table body content with the fetched rows
+            })
+            .catch(error => console.error('Error fetching search results:', error));
+    });
+</script>
 </body>
 
 </html>

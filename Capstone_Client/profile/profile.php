@@ -220,18 +220,19 @@ echo "</script>
                         <!-- Display Order Status -->
                         <?php if ($order['Processed'] == 1): ?>
                             <?php if ($order['Order_Status'] == 1): ?>
-                                <p class="order-status approved">Status: Approved</p>
+                                <p class="order-status approved"><strong>Status: </strong> Approved</p>
                             <?php elseif ($order['Order_Status'] == -1): ?>
-                                <p class="order-status rejected">Status: Rejected</p>
+                                <p class="order-status rejected"><strong>Status: </strong>Rejected</p>
                             <?php endif; ?>
                             
                             <!-- Okay Button -->
                             <form method="POST" action="delete_order_request.php">
                                 <input type="hidden" name="request_id" value="<?= htmlspecialchars($order['Request_ID']) ?>">
+                                <br>
                                 <button type="submit" class="okay-btn">Okay</button>
                             </form>
                         <?php else: ?>
-                            <p class="order-status pending">Status: Pending</p>
+                            <p class="order-status pending"> <strong>Status: </strong>Pending</p>
                         <?php endif; ?>
                     </div>
                 <?php endforeach; ?>

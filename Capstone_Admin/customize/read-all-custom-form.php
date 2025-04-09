@@ -182,7 +182,7 @@ $orderStatusMap = [
             <div class="search-box">
                 <form method="GET" action="">
                     <input type="text" name="search" placeholder="Search..." value="<?php echo htmlspecialchars($search); ?>" />
-                    <button type="submit"><i class="bx bx-search"></i></button>
+                 
                 </form>
             </div>
             <div class="profile-details" onclick="toggleDropdown()">

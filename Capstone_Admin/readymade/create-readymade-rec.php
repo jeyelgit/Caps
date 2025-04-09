@@ -36,7 +36,7 @@ try {
     // EXECUTE STATEMENT
     if ($stmt->execute()) {
         // Redirect to the appropriate page for approval management
-        header("Location: http://localhost../readymade/read-all-readymade-form.php");
+        header("Location: ../order-requests/read-all-request-form.php");
         exit; // Ensure script stops after the redirect
     } else {
         echo "Error: Could not execute the query.";

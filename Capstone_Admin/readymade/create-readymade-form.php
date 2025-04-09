@@ -27,8 +27,8 @@ if (!$admin) {
 $adminName = htmlspecialchars($admin['First_Name']);
 $profilePicPath = htmlspecialchars($admin['PicPath']);
 
-// Fetch products from the database
-$stmt = $pdo->prepare("SELECT Product_ID, Product_Name, Price, GLB_File_URL FROM tbl_prod_info");
+// Fetch products from the database (only readymade products)
+$stmt = $pdo->prepare("SELECT Product_ID, Product_Name, Price, GLB_File_URL FROM tbl_prod_info WHERE product_type = 'readymade'");
 $stmt->execute();
 $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -95,10 +95,8 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <i class="bx bx-menu sidebarBtn"></i>
                 <span class="dashboard">Dashboard</span>
             </div>
-            <div class="search-box">
-                <input type="text" placeholder="Search..." />
-                <i class="bx bx-search"></i>
-            </div>
+         
+         
 
 
             <div class="profile-details" onclick="toggleDropdown()">

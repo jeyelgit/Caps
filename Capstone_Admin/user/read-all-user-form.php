@@ -47,6 +47,7 @@ $stmt->bindParam(':search', $searchParam, PDO::PARAM_STR);
 $stmt->execute();
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+// Handle AJAX requests to return only table rows
 if (isset($_GET['search'])) {
     foreach ($rows as $row) {
         echo '
@@ -77,47 +78,41 @@ if (isset($_GET['search'])) {
     <script src="../static/js/dashboard.js"></script>
     <link href="../static/css-files/dashboard.css" rel="stylesheet">
     <link href="../static/css-files/button.css" rel="stylesheet">
-    <!-- <link href="../static/css-files/dashboard.css" rel="stylesheet"> -->
     <link href="../static/css-files/admin_homev2.css" rel="stylesheet">
-    <link href="../static/js/admin_home.js" rel="">
     <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet" />
-
 </head>
 
 <body>
     <div class="sidebar">
-      <div class="logo-details">
-        <span class="logo_name">
-            <img src="../static/images/rm raw png.png" alt="RM BETIS FURNITURE"  class="logo_name">
-        </span>
-    </div>
+        <div class="logo-details">
+            <span class="logo_name">
+                <img src="../static/images/rm raw png.png" alt="RM BETIS FURNITURE" class="logo_name">
+            </span>
+        </div>
         <ul class="nav-links">
-        
             <li>
-                <a href="../dashboard/dashboard.php" class="">
+                <a href="../dashboard/dashboard.php">
                     <i class="bx bx-grid-alt"></i>
                     <span class="links_name">Dashboard</span>
                 </a>
             </li>
-         
             <li>
-                <a href="../purchase-history/read-all-history-form.php" class="">
+                <a href="../purchase-history/read-all-history-form.php">
                     <i class="bx bx-comment-detail"></i>
                     <span class="links_name">All Purchase History</span>
                 </a>
             </li>
             <li>
-    <a href="../reviews/read-all-reviews-form.php">
-        <i class="bx bx-message-dots"></i> <!-- Changed to a more appropriate message icon -->
-        <span class="links_name">All Reviews</span>
-    </a>
-</li>
+                <a href="../reviews/read-all-reviews-form.php">
+                    <i class="bx bx-message-dots"></i>
+                    <span class="links_name">All Reviews</span>
+                </a>
+            </li>
         </ul>
-
     </div>
 
     <section class="home-section">
-    <nav>
+        <nav>
             <div class="sidebar-button">
                 <i class="bx bx-menu sidebarBtn"></i>
                 <span class="dashboard">Dashboard</span>
@@ -125,115 +120,69 @@ if (isset($_GET['search'])) {
             <div class="search-box">
                 <form method="GET" action="">
                     <input type="text" name="search" placeholder="Search..." value="<?php echo htmlspecialchars($search); ?>" />
-                    <button type="submit"><i class="bx bx-search"></i></button>
                 </form>
             </div>
-
-
             <div class="profile-details" onclick="toggleDropdown()">
                 <img src="../<?php echo $profilePicPath; ?>" alt="Profile Picture" />
                 <span class="admin_name"><?php echo $adminName; ?></span>
                 <i class="bx bx-chevron-down dropdown-button"></i>
-
                 <div class="dropdown" id="profileDropdown">
-                    <!-- Modified link here -->
                     <a href="../admin/read-one-admin-form.php?id=<?php echo urlencode($adminId); ?>">Settings</a>
                     <a href="../admin/logout.php">Logout</a>
                 </div>
             </div>
+        </nav>
+        <br><br><br>
 
-<!-- Link to External JS -->
-<script src="dashboard.js"></script>
+        <div class="container_boxes">
+            <h4>USER LIST<a href="create-user-form.php">Create New User</a></h4>
+            <div class="button-container">
+                <a href="../dashboard/dashboard.php" class="buttonBack">Back to Dashboard</a>
+            </div>
+            <div id="user-list">
+                <table width="100%" border="1" cellspacing="5">
+                    <thead>
+                        <tr>
+                            <th>USER ID</th>
+                            <th>LAST NAME</th>
+                            <th>FIRST NAME</th>
+                            <th>MOBILE NUMBER</th>
+                            <th>STATUS</th>
+                            <th colspan="3">ACTIONS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($rows as $row): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($row["User_ID"]) ?></td>
+                                <td><?= htmlspecialchars($row["Last_Name"]) ?></td>
+                                <td><?= htmlspecialchars($row["First_Name"]) ?></td>
+                                <td><?= htmlspecialchars($row["Mobile_Number"]) ?></td>
+                                <td><?= htmlspecialchars($row["Status"]) ?></td>
+                                <td><a class="buttonView" href="read-one-user-form.php?id=<?= htmlspecialchars($row["User_ID"]) ?>" target="_parent">View</a></td>
+                                <td><a class="buttonEdit" href="update-user-form.php?id=<?= htmlspecialchars($row["User_ID"]) ?>" target="_parent">Edit</a></td>
+                                <td><a class="buttonDelete" href="delete-user-form.php?id=<?= htmlspecialchars($row["User_ID"]) ?>" target="_parent">Delete</a></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
 
+    <script>
+        document.querySelector('.search-box input[name="search"]').addEventListener('input', function () {
+            const searchValue = this.value.trim();
+            const url = searchValue ? `read-all-user-form.php?search=${encodeURIComponent(searchValue)}` : `read-all-user-form.php?search=`;
 
- </nav>
-<br><br><br>
-
-<div class="container_boxes">
-    <h4>USER LIST<a href="create-user-form.php">Create New User</a></h4>
-    <!-- Add Back to Dashboard button -->
-    <div class="button-container">
-                    <a href="../dashboard/dashboard.php" class="buttonBack">Back to Dashboard</a>
-                </div>
-                <div id="user-list">
-    <table width="100%" border="1" cellspacing="5">
-        <thead>
-            <tr>
-                <th>USER ID</th>
-                <th>LAST NAME</th>
-                <th>FIRST NAME</th>
-                <th>MOBILE NUMBER</th>
-                <th>STATUS</th>
-                <th colspan="3">ACTIONS</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($rows as $row): ?>
-                <tr>
-                    <td><?= htmlspecialchars($row["User_ID"]) ?></td>
-                    <td><?= htmlspecialchars($row["Last_Name"]) ?></td>
-                    <td><?= htmlspecialchars($row["First_Name"]) ?></td>
-                    <td><?= htmlspecialchars($row["Mobile_Number"]) ?></td>
-                    <td><?= htmlspecialchars($row["Status"]) ?></td>
-                    <td><a class="buttonView" href="read-one-user-form.php?id=<?= htmlspecialchars($row["User_ID"]) ?>" target="_parent">View</a></td>
-                    <td><a class="buttonEdit" href="update-user-form.php?id=<?= htmlspecialchars($row["User_ID"]) ?>" target="_parent">Edit</a></td>
-                    <td><a class="buttonDelete" href="delete-user-form.php?id=<?= htmlspecialchars($row["User_ID"]) ?>" target="_parent">Delete</a></td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-</div>
-</div>
-</section>
-<script>
-        let sidebar = document.querySelector(".sidebar");
-        let sidebarBtn = document.querySelector(".sidebarBtn");
-        sidebarBtn.onclick = function () {
-            sidebar.classList.toggle("active");
-            if (sidebar.classList.contains("active")) {
-                sidebarBtn.classList.replace("bx-menu", "bx-menu-alt-right");
-            } else {
-                sidebarBtn.classList.replace("bx-menu-alt-right", "bx-menu");
-            }
-        };
-
-        document.querySelectorAll('.dropdown-toggle').forEach((toggle) => {
-        toggle.addEventListener('click', function () {
-            const parent = this.parentElement; // Get the parent <li> of the toggle
-            const dropdownMenu = parent.querySelector('.dropdown-menu'); // Get the <ul> of the dropdown menu
-            parent.classList.toggle('active'); // Toggle the 'active' class on the parent <li>
-
-            // Toggle the chevron icon rotation
-            const chevron = this.querySelector('i'); // Find the chevron icon inside the toggle
-            if (parent.classList.contains('active')) {
-                chevron.classList.remove('bx-chevron-down');
-                chevron.classList.add('bx-chevron-up'); // Change to up when menu is open
-            } else {
-                chevron.classList.remove('bx-chevron-up');
-                chevron.classList.add('bx-chevron-down'); // Change to down when menu is closed
-            }
-            
-            // Toggle the display of the dropdown menu
-            dropdownMenu.style.display = parent.classList.contains('active') ? 'block' : 'none';
+            fetch(url)
+                .then(response => response.text())
+                .then(data => {
+                    const tableBody = document.querySelector('#user-list table tbody');
+                    tableBody.innerHTML = data.trim(); // Replace the table body content with the fetched rows
+                })
+                .catch(error => console.error('Error fetching search results:', error));
         });
-    });
-
-    document.querySelector('.search-box input[name="search"]').addEventListener('input', function () {
-        const searchValue = this.value.trim();
-
-        // Determine the URL based on whether the search bar is empty
-        const url = searchValue ? `read-all-user-form.php?search=${encodeURIComponent(searchValue)}` : `read-all-user-form.php`;
-
-        // Send an AJAX request to fetch results
-        fetch(url)
-            .then(response => response.text())
-            .then(data => {
-                // Update the user list with the filtered results
-                const tableBody = document.querySelector('#user-list table tbody');
-                tableBody.innerHTML = data.trim(); // Ensure no extra whitespace is added
-            })
-            .catch(error => console.error('Error fetching search results:', error));
-    });
-</script>
+    </script>
 </body>
 </html>

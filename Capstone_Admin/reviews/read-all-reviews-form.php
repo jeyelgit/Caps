@@ -6,7 +6,6 @@ include '../config/database.php';
 
 // Check if the admin's ID is stored in the session after login
 if (!isset($_SESSION['admin_id'])) {
-    // Redirect to login page if not logged in
     header("Location: ../login.php");
     exit();
 }
@@ -18,7 +17,6 @@ $stmt->bindParam(':admin_id', $adminId);
 $stmt->execute();
 $admin = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Check if admin data is fetched
 if (!$admin) {
     echo "Admin not found.";
     exit();
@@ -52,6 +50,7 @@ $stmt->bindParam(':search', $searchParam, PDO::PARAM_STR);
 $stmt->execute();
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+// Handle AJAX requests to return only table rows
 if (isset($_GET['search'])) {
     foreach ($rows as $row) {
         echo '
@@ -227,17 +226,13 @@ if (isset($_GET['search'])) {
 
     document.querySelector('.search-box input[name="search"]').addEventListener('input', function () {
         const searchValue = this.value.trim();
+        const url = searchValue ? `read-all-reviews-form.php?search=${encodeURIComponent(searchValue)}` : `read-all-reviews-form.php?search=`;
 
-        // Determine the URL based on whether the search bar is empty
-        const url = searchValue ? `read-all-reviews-form.php?search=${encodeURIComponent(searchValue)}` : `read-all-reviews-form.php`;
-
-        // Send an AJAX request to fetch results
         fetch(url)
             .then(response => response.text())
             .then(data => {
-                // Update the reviews list with the filtered results
                 const tableBody = document.querySelector('#reviews-list table tbody');
-                tableBody.innerHTML = data.trim(); // Ensure no extra whitespace is added
+                tableBody.innerHTML = data.trim(); // Replace the table body content with the fetched rows
             })
             .catch(error => console.error('Error fetching search results:', error));
     });

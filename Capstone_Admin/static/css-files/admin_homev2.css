@@ -25,15 +25,51 @@
   width: 240px;
   background:  #383838;
   transition: all 0.5s ease;
+  overflow: hidden; /* Hide overflowing content */
 }
 .sidebar.active{
-  width: 60px;
+  width: 600px;
 }
 .sidebar .logo-details{
   height: 80px;
   display: flex;
   align-items: center;
 }
+
+/* Hide the logo when the sidebar is not active */
+.sidebar .logo-details .logo_name {
+  opacity: 0; /* Make the logo invisible */
+  transition: opacity 0.5s ease; /* Smooth transition for visibility */
+}
+
+.sidebar.active .logo-details .logo_name {
+  opacity: 1; /* Make the logo visible when the sidebar is active */
+}
+
+/* Hide the navigation list when the sidebar is not active */
+.sidebar .nav-links {
+  opacity: 0; /* Make the navigation list invisible */
+  transition: opacity 0.5s ease; /* Smooth transition for visibility */
+}
+
+.sidebar.active .nav-links {
+  opacity: 1; /* Make the navigation list visible when the sidebar is active */
+}
+
+/* Hide the navigation list items and links when the sidebar is not active */
+.sidebar .nav-links li,
+.sidebar .nav-links li a {
+  opacity: 0; /* Make the list items and links invisible */
+  pointer-events: none; /* Prevent interaction */
+  transition: opacity 0.5s ease; /* Smooth transition for visibility */
+}
+
+.sidebar.active .nav-links li,
+.sidebar.active .nav-links li a {
+  opacity: 1; /* Make the list items and links visible */
+  pointer-events: auto; /* Allow interaction */
+}
+
 .sidebar .logo-details i{
   font-size: 28px;
   font-weight: 500;
@@ -48,27 +84,20 @@
 }
 .sidebar .nav-links{
   margin-top: 10px;
+  opacity: 1; /* Fully visible */
+  transition: opacity 0.5s ease; /* Smooth transition for opacity */
+  padding-left: 1rem;
+
+}
+
+.sidebar .nav-links ul li{
+  padding-left: 1rem;
 }
 .sidebar .nav-links li{
   position: relative;
   list-style: none;
   height: 50px;
 }
-
-/* Default state when sidebar is not active (hidden) */
-.sidebar .nav-links li a, 
-.sidebar .logo-details .logo_name {
-    opacity: 0;
-    transition: opacity 0.5s ease; /* Smooth transition */
-}
-
-/* When sidebar is active, make elements fully visible */
-.sidebar.active .nav-links li a, 
-.sidebar.active .logo-details .logo_name {
-    opacity: 1;
-}
-
-
 .sidebar .nav-links li a{
   height: 100%;
   width: 100%;
@@ -94,6 +123,7 @@
   font-size: 15px;
   font-weight: 400;
   white-space: nowrap;
+  padding: 10px;
 }
 .sidebar .nav-links .log_out{
   position: absolute;
@@ -588,6 +618,10 @@ input:valid + span:after {
   border-color: rgb(217 83 79 / 60%);
 }
 
+.button-container {
+  display: flex;
+  margin-top: 1rem;
+}
 
 .buttonUpdate, .buttonDelete, .buttonBack {
   padding: 0.5rem 1rem;
@@ -607,7 +641,11 @@ input:valid + span:after {
 }
 
 .buttonBack {
-  background-color: #0275d8;
+  background-color: #387de4;
+  color: white;
+}
+
+.buttonBack,  .buttonUpdate, .buttonDelete, .buttonEdit, .buttonView{
   color: white;
   text-decoration: none;
   display: inline-block;
@@ -616,7 +654,11 @@ input:valid + span:after {
   margin-bottom: 8px;
 }
 
+
+
 .iti__flag-container {
   display: none;
 }
+
+
 

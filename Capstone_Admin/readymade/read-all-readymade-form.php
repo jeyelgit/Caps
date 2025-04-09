@@ -67,6 +67,17 @@ $statusLabels = [
 ];
 
 if (isset($_GET['search'])) {
+    echo '<table width="100%" border="1" cellspacing="5">
+        <thead>
+            <tr>
+                <th>USER NAME</th>
+                <th>PRODUCT NAME</th>
+                <th>TOTAL PRICE</th>
+                <th>ORDER STATUS</th>
+                <th colspan="3" style="text-align: center;">ACTIONS</th>
+            </tr>
+        </thead>
+        <tbody>';
     foreach ($rows as $row) {
         $orderID = htmlspecialchars($row["ReadyMadeOrder_ID"]);
         $userName = htmlspecialchars($row["User_Name"]);
@@ -93,6 +104,7 @@ if (isset($_GET['search'])) {
             <td style="text-align: center;"><a class="buttonDelete" href="delete-readymade-form.php?id=' . $orderID . '" target="_parent">Delete</a></td>
         </tr>';
     }
+    echo '</tbody></table>';
     exit; // Stop further execution for AJAX requests
 }
 ?>
@@ -157,7 +169,6 @@ if (isset($_GET['search'])) {
             <div class="search-box">
                 <form method="GET" action="">
                     <input type="text" name="search" placeholder="Search..." value="<?php echo htmlspecialchars($search); ?>" />
-                    <button type="submit"><i class="bx bx-search"></i></button>
                 </form>
             </div>
 
@@ -173,12 +184,12 @@ if (isset($_GET['search'])) {
                     <a href="../admin/logout.php">Logout</a>
                 </div>
             </div>
-
+ </nav>
 <!-- Link to External JS -->
 <script src="dashboard.js"></script>
 
 
- </nav>
+
 <br><br><br>
 
 <div class="container_boxes">
@@ -267,8 +278,30 @@ if (isset($_GET['search'])) {
             .then(response => response.text())
             .then(data => {
                 // Update the ready-made orders list with the filtered results
-                const tableBody = document.querySelector('#ready-made-orders-list table tbody');
-                tableBody.innerHTML = data.trim(); // Ensure no extra whitespace is added
+                const readyMadeOrdersList = document.getElementById('ready-made-orders-list');
+                readyMadeOrdersList.innerHTML = data.trim(); // Ensure no extra whitespace is added
+            })
+            .catch(error => console.error('Error fetching search results:', error));
+    });
+
+    // Ensure the table resets to its original state when the search input is cleared
+    document.querySelector('.search-box input[name="search"]').addEventListener('blur', function () {
+        if (!this.value.trim()) {
+            // Reload the page to reset the table to its original state
+            location.reload();
+        }
+    });
+
+    document.querySelector('.search-box input[name="search"]').addEventListener('input', function () {
+        const searchValue = this.value;
+
+        // Send an AJAX request to fetch filtered results
+        fetch(`read-all-readymade-form.php?search=${encodeURIComponent(searchValue)}`)
+            .then(response => response.text())
+            .then(data => {
+                // Update the ready-made orders list with the filtered results
+                const readyMadeOrdersList = document.getElementById('ready-made-orders-list');
+                readyMadeOrdersList.innerHTML = data;
             })
             .catch(error => console.error('Error fetching search results:', error));
     });

@@ -54,15 +54,17 @@ if (isset($_GET['search'])) {
 
     // Return the full table structure for AJAX requests
     echo '<table width="100%" border="1" cellspacing="5">
-        <tr>
-            <th>USER NAME</th>
-            <th>PRODUCT NAME</th>
-            <th>ORDER TYPE</th>
-            <th>QUANTITY</th>
-            <th>TOTAL PRICE</th>
-            <th colspan="3" style="text-align: center;">ACTIONS</th>
-        </tr>';
-
+        <thead>
+            <tr>
+                <th>USER NAME</th>
+                <th>PRODUCT NAME</th>
+                <th>ORDER TYPE</th>
+                <th>QUANTITY</th>
+                <th>TOTAL PRICE</th>
+                <th colspan="3" style="text-align: center;">ACTIONS</th>
+            </tr>
+        </thead>
+        <tbody>';
     foreach ($rows as $row) { 
         $cartID = htmlspecialchars($row["Cart_ID"]);
         $userName = htmlspecialchars($row["User_Name"]);
@@ -83,8 +85,7 @@ if (isset($_GET['search'])) {
             <td><a class="buttonDelete" href="delete-cart-form.php?id='.$cartID.'" target="_parent">Delete</a></td>
         </tr>';
     }
-
-    echo '</table>';
+    echo '</tbody></table>';
     exit; // Stop further execution for AJAX requests
 }
 
@@ -126,7 +127,7 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <link href="../static/css-files/dashboard.css" rel="stylesheet">
     <link href="../static/css-files/button.css" rel="stylesheet">
     <link href="../static/css-files/admin_homev2.css" rel="stylesheet">
-    <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet" />
+    <!-- <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet" /> -->
 
 </head>
 
@@ -164,31 +165,25 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <section class="home-section">
     <nav>
-            <div class="sidebar-button">
-                <i class="bx bx-menu sidebarBtn"></i>
-                <span class="dashboard">Dashboard</span>
-            </div>
-            <div class="search-box">
-                <input type="text" id="search" placeholder="Search..." value="<?php echo htmlspecialchars($search); ?>" />
-            </div>
-
-
-            <div class="profile-details" onclick="toggleDropdown()">
-    <img src="../<?php echo $profilePicPath; ?>" alt="Profile Picture" />
-    <span class="admin_name"><?php echo $adminName; ?></span>
-    <i class="bx bx-chevron-down dropdown-button"></i>
-
-    <div class="dropdown" id="profileDropdown">
-        <a href="../admin/read-one-admin-form.php">Settings</a>
-        <a href="../admin/logout.php">Logout</a>
+    <div class="sidebar-button">
+        <i class="bx bx-menu sidebarBtn"></i>
+        <span class="dashboard">Dashboard</span>
     </div>
-</div>
-
-<!-- Link to External JS -->
-<script src="../static/js/dashboard.js"></script>
-
-
- </nav>
+    <div class="search-box">
+        <form method="GET" action="">
+            <input type="text" id="search" name="search" placeholder="Search..." value="<?php echo htmlspecialchars($search); ?>" />
+        </form>
+    </div>
+    <div class="profile-details" onclick="toggleDropdown()">
+        <img src="../<?php echo $profilePicPath; ?>" alt="Profile Picture" />
+        <span class="admin_name"><?php echo $adminName; ?></span>
+        <i class="bx bx-chevron-down dropdown-button"></i>
+        <div class="dropdown" id="profileDropdown">
+            <a href="../admin/read-one-admin-form.php">Settings</a>
+            <a href="../admin/logout.php">Logout</a>
+        </div>
+    </div>
+</nav>
 
 <br>
 <br>
@@ -269,7 +264,7 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
     });
 
 document.getElementById('search').addEventListener('input', function () {
-    const searchValue = this.value;
+    const searchValue = this.value.trim();
 
     // Send an AJAX request to fetch filtered results
     fetch(`read-all-cart-form.php?search=${encodeURIComponent(searchValue)}`)
@@ -277,7 +272,7 @@ document.getElementById('search').addEventListener('input', function () {
         .then(data => {
             // Update the cart list with the filtered results
             const cartList = document.getElementById('cart-list');
-            cartList.innerHTML = data;
+            cartList.innerHTML = data.trim(); // Ensure no extra whitespace is added
         })
         .catch(error => console.error('Error fetching search results:', error));
 });
