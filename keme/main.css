@@ -43,13 +43,26 @@ li {
 
 }
 #ARButton {
-  color: black !important;
-  width: 200px !important;
-  font-size: 4em !important;
-  padding: 0.5em !important;
-  left: calc(50% - 5em) !important;
-  z-index: -1; /* Ensure the button is below other elements */
-  position: relative; /* Ensure proper stacking context */
+  position: fixed; /* Override position */
+  bottom: 20px;
+  padding: 12px 6px;
+  border: 1px solid rgb(255, 255, 255);
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.1);
+  color: rgb(0, 0, 0);
+  font: 13px sans-serif;
+  text-align: center;
+  opacity: 0.5;
+  outline: none;
+  z-index: 999;
+  cursor: pointer;
+  left: calc(50% - 50px);
+
+  
+}
+
+#ARButton:hover {
+  background-color: #a67c5f; /* Change background color on hover */
 }
 
 /* Importing Google font - Fira Sans */
