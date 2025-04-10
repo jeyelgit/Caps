@@ -181,7 +181,9 @@ echo "</script>
         <a href="../profile/profile.php" class="profile activecon" id="sign_in">Profile</a>
         <ul class="dropdown-menus">
           <li><a href="../profile/profile.php">Profile</a></li>
-          <li><a href="logout.php">Logout</a></li>
+          <li><a href="../logout/logout.php">Logout</a></li>
+
+
         </ul>
       </li>
       <span id="close-menu-btn" class="material-symbols-outlined">close</span>

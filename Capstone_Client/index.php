@@ -11,9 +11,10 @@ $recaptchaSecretKey = '6LdGk9wqAAAAAJB1oI6jUNdeLa2IM83P0-02sTBj'; // Replace wit
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = trim($_POST['email']);
     $password = trim($_POST['password']);
-    $recaptchaResponse = $_POST['g-recaptcha-response'];
+    // $recaptchaResponse = $_POST['g-recaptcha-response'];
 
     // Verify the reCAPTCHA response
+    /*
     $response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=$recaptchaSecretKey&response=$recaptchaResponse");
     $responseKeys = json_decode($response, true);
 
@@ -24,6 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         header('Location: dashboard/error.php');
         exit();
     } else {
+    */
         try {
             // Prepare the SQL statement to fetch user data
             $stmt = $pdo->prepare("SELECT * FROM tbl_user_info WHERE Email_Address = :email"); // Updated table name
@@ -60,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             header('Location: dashboard/error.php');
             exit();
         }
-    }
+    // }
 }
 ?>
 <!DOCTYPE html>
@@ -91,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <div class="social-login">
                <!-- Remove social login buttons here -->
             </div>
-            <div class="divider">- OR -</div>
+            <!-- <div class="divider">- OR -</div> -->
             <form method="POST" action="">
                 <div class="form-group">
                     <label for="email">Email Address</label>
@@ -101,9 +103,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <label for="password">Password</label>
                     <input type="password" id="password" name="password" placeholder="Enter your password" required>
                 </div>
-                <div class="g-recaptcha" data-sitekey="6LdGk9wqAAAAAPGLtqpTt5f2IdBdSFGjA806AF7X"></div>
+                <!-- <div class="g-recaptcha" data-sitekey="6LdGk9wqAAAAAPGLtqpTt5f2IdBdSFGjA806AF7X" style="transform: scale(0.7); transform-origin: 0 0;"></div> -->
                 <div class="form-options">
-                    <label><input type="checkbox"> Remember me</label>
+                    <!-- <label><input type="checkbox"> Remember me</label> -->
                     <a href="login/forget-password.php">Forgot password?</a>
                 </div>
                 <div class="buttons">
@@ -111,9 +113,78 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <button type="submit" class="login">Login</button>
                 </div>
             </form>
+            <br>
             <div class="terms">
-                By signing up, you agree to Housy's <a href="#">Terms and Conditions & Privacy Policy</a>
+                By signing up, you agree to RM Betis Furniture's 
+                <button type="button" id="termsButton" class="termsbutton">Terms and Conditions & Privacy Policy</button>
             </div>
+            <!-- Modal for Terms and Conditions -->
+            <div id="termsModal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h1>Terms and Conditions</h1>
+                    <p>Welcome to RM Betis Furniture. By using our system and placing an order, you agree to the following terms and conditions:</p>
+                    <h2>1. Downpayment Policy</h2>
+                    <p>Before we process or accept your order, you are required to pay a 60% downpayment. The remaining balance must be settled upon completion of the order.</p>
+                    <h2>2. No Cancellation Policy</h2>
+                    <p>Once an order is placed, cancellations are not allowed. Please ensure that all details of your order are correct before confirming.</p>
+                    <h2>3. Privacy Policy</h2>
+                    <p>All personal information you provide in this system will be kept private and secure. We are committed to protecting your data and will not share it with third parties without your consent.</p>
+                    <p>If you have any questions or concerns regarding these terms, please contact us for clarification.</p>
+                </div>
+            </div>
+            <!-- Add modal styles -->
+            <style>
+                .modal {
+                    position: fixed;
+                    z-index: 1;
+                    left: 0;
+                    top: 0;
+                    width: 100%;
+                    height: 100%;
+                    overflow: auto;
+                    background-color: rgba(0, 0, 0, 0.4);
+                }
+                .modal-content {
+                    background-color: #fff;
+                    margin: 15% auto;
+                    padding: 20px;
+                    border: 1px solid #888;
+                    width: 80%;
+                    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+                }
+                .close {
+                    color: #aaa;
+                    float: right;
+                    font-size: 28px;
+                    font-weight: bold;
+                    cursor: pointer;
+                }
+                .close:hover,
+                .close:focus {
+                    color: black;
+                    text-decoration: none;
+                }
+            </style>
+            <script>
+                const termsButton = document.getElementById('termsButton');
+                const termsModal = document.getElementById('termsModal');
+                const closeModal = termsModal.querySelector('.close');
+
+                termsButton.addEventListener('click', () => {
+                    termsModal.style.display = 'block';
+                });
+
+                closeModal.addEventListener('click', () => {
+                    termsModal.style.display = 'none';
+                });
+
+                window.addEventListener('click', (event) => {
+                    if (event.target === termsModal) {
+                        termsModal.style.display = 'none';
+                    }
+                });
+            </script>
         </div>
     </div>
     <a class="theme-toggle">
