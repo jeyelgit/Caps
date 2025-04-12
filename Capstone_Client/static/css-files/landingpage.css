@@ -1,0 +1,327 @@
+body {
+       
+  font-family: Arial, sans-serif;
+  background-color: white;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100vh; /* Ensure the body takes full height of the screen */
+}
+* {
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background-color: #B99470;
+  color: white;
+  padding: 2rem;
+  text-align: center;
+}
+
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  background-color: #f7f7f7;
+  padding: 1.5rem;
+}
+
+nav a {
+  text-decoration: none;
+  color: #B99470;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+nav a:hover {
+  color: #8a6b4e;
+}
+
+section {
+  padding: 2rem;
+}
+
+.products {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  margin:30px;
+  text-align: center;
+}
+.sampleAr {
+  display: flex;
+  justify-content: center; /* Centers content horizontally */
+  align-items: center; /* Centers content vertically */
+  text-align: center; /* Centers the text inside the h2 */
+}
+
+.sampleAr h2 {
+  margin: 0; /* Optional: Remove any default margin */
+}
+
+
+.product {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  text-align: center;
+  padding: 1rem;
+}
+
+model-viewer {
+  width: 100%;
+  height: 300px;
+}
+
+#tutorial {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  background: hsla(52, 94%, 94%, 1);
+
+  background: linear-gradient(135deg, hsla(52, 94%, 94%, 1) 20%, hsla(53, 32%, 70%, 1) 61%);
+
+  background: -moz-linear-gradient(135deg, hsla(52, 94%, 94%, 1) 20%, hsla(53, 32%, 70%, 1) 61%);
+
+  background: -webkit-linear-gradient(135deg, hsla(52, 94%, 94%, 1) 20%, hsla(53, 32%, 70%, 1) 61%);
+
+  filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#FEFAE0", endColorstr="#CCC69B", GradientType=1 );
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.tutorial-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center; /* Centers the content horizontally */
+  height: 100vh; /* Ensure the section takes full viewport height */
+  gap: 10rem;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  box-sizing: border-box;
+}
+
+.tutorial-text {
+  flex: 0 1 630px;
+  text-align: center;
+  padding: 4rem;
+  color: white;
+}
+
+
+
+.tutorial-text ol {
+  list-style: none;
+  padding-left: 0; /* Optional: remove left padding */
+ 
+}
+
+.tutorial-text ol li {
+  text-decoration: none; /* Already fine */
+}
+.ARTitle {
+  align-self: flex-start;
+  text-align: left;
+  font-size: 1.5rem;
+  margin-top: 0;
+  margin-bottom: 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  padding: 10px;
+  width: fit-content;
+}
+
+.ARTitle h2 {
+  margin: 0;
+  width: 0;
+  overflow: hidden;
+  border-right: 2px solid #000; /* Vertical line cursor */
+  animation:
+    typing 3.5s steps(30, end) 1s infinite,
+    blink 0.75s step-end infinite;
+}
+
+@keyframes typing {
+  from { width: 0; }
+  to { width: 31ch; }
+}
+
+@keyframes blink {
+  0%, 100% { border-color: transparent; }
+  50% { border-color: black; }
+}
+
+
+
+.speech-bubble {
+  position: relative;
+  background: #e5e5ea; /* iMessage gray for received messages */
+  border-radius: 30px;
+  padding: 25px 30px;
+  max-width: 600px;
+  margin: 50px auto 50px 30px; /* aligned to the left */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  color: #000000;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Arrow pointing right from the middle */
+.speech-bubble::after {
+  content: "";
+  position: absolute;
+  top: 40px; /* vertical position of arrow */
+  right: -20px; /* push the arrow outside the bubble */
+  width: 0;
+  height: 0;
+  border-top: 15px solid transparent;
+  border-bottom: 15px solid transparent;
+  border-left: 20px solid #e5e5ea; /* right-pointing arrow */
+}
+
+
+.speech-bubble h2 {
+  margin-top: 0;
+  color: #2c3e50;
+  font-size: 1.6rem;
+}
+
+.speech-bubble p {
+  margin: 1rem 0;
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+.speech-bubble b {
+  color: #007bff;
+}
+
+
+.phones-wrapper {
+  position: relative;
+  width: 320px;
+  height: 620px; /* Set height so the container doesn't collapse */
+  flex-shrink: 0;
+  margin: 0 auto;
+}
+
+.cellphone,
+.cellphone2 {
+  width: 220px;
+  height: 500px;
+  border: 16px solid #888;
+  border-radius: 36px;
+  padding: 1rem;
+  background-color: #000;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cellphone2 {
+  transform: rotate(-20deg) translateX(-30px);
+  z-index: 1;
+  opacity: 0.8;
+}
+
+.cellphone {
+  z-index: 2; /* in front */
+}
+
+.cellphone::before,
+.cellphone2::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 30px;
+  background-color: #000;
+  border-radius: 20px;
+  z-index: 10;
+}
+
+.cellphone video,
+.cellphone2 video {
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+}
+
+footer {
+  background-color: #B99470;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  margin-top: 2rem;
+}
+
+#about {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+
+  padding: 4rem;
+  height: 60vh; /* This will make the height 50% of the viewport height */
+ 
+}
+
+
+
+.about-text {
+  flex: 0 1 500px;
+  text-align: left;
+  border-radius: 24% 76% 30% 70% / 80% 27% 73% 20%;
+  background-color: #B99470;
+  animation: border-radius-animation 5s infinite alternate; /* Add the animation */
+  padding: 4rem;
+  height: auto;
+  color: white;
+}
+.about-text p {
+  margin: 1rem; /* or any value you like */
+}
+
+@keyframes border-radius-animation {
+  0% {
+    border-radius: 24% 76% 30% 70% / 80% 27% 73% 20%;
+  }
+  50% {
+    border-radius: 13% 87% 21% 79% / 80% 20% 80% 20% ;
+  }
+  100% {
+    border-radius:86% 14% 85% 15% / 31% 70% 30% 69%   ;
+  }
+}
+
+.about-images {
+  flex: 1 1 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.about-images img {
+  width: 100%;
+  height: 400px;
+  display: none;
+  transition: opacity 1s ease-in-out;
+}
+
+.about-images img.active {
+  display: block;
+}
